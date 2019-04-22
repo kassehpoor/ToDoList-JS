@@ -1,18 +1,43 @@
-// version 0.0.1
+// version 0.0.2
 (function todoModule() {
 
-    var todos = [];
-	window.todos = todos;
+	var todos, addButton, deleteButton, todoText, toDoListElements;
 	
-    var addButton = document.getElementById("addButton");
-	var deleteButton = document.getElementById("deleteButton");
-    var todoText = document.getElementById("todoText");
-    var toDoListElements = document.getElementById("toDoListElements");
+	window.onload = init;
+	
+	function init () {
+		getTodosFromLocalStorage();
 
-    addButton.onclick = addItem;
-	deleteButton.onclick = deleteAllTodos;
+		addButton = document.getElementById("addButton");
+	    deleteButton = document.getElementById("deleteButton");
+        todoText = document.getElementById("todoText");
+        toDoListElements = document.getElementById("toDoListElements");
+		
+		addButton.onclick = function (){addItem(todos)};
+	    deleteButton.onclick = function (){deleteAllTodos(todos)};
+
+		render();
+	}
 	
-	//---------------------------------------------------------------
+	//------Getting Todos Items form Loca Storage--------------------------
+	
+	function getTodosFromLocalStorage() {
+		var retrievedData = localStorage.getItem('todos');
+		todos = retrievedData ? JSON.parse(retrievedData) : [];
+		window.todos = todos;
+	}
+	
+	//--------------------------------------------------------------------
+	
+	function saveTodosOnLocalStorage() {
+		var todosToBeSaved = todos.map(todo => ({
+			text: todo.text,
+			isDone: todo.isDone
+		}));
+		localStorage.setItem('todos', JSON.stringify(todosToBeSaved));
+	}
+	
+	//--------------------------------------------------------------------
 
     function render() {
 		todos.forEach(function(todo) {
@@ -30,38 +55,45 @@
 		});
     }
 
-	//---------------------------------------------------------------
+	//------------------------------------------------------------------
 	
-    function addItem() {
+    function addItem(todos) {
         var el = document.getElementById("todoText");
 		
-				if (el.value!=""){
+			if (el.value!=""){
 				todos.push({text:el.value,isDone:false,isRendered:false});
+				saveTodosOnLocalStorage();
 				el.value = "";
 				el.focus();
-				}
+			}
 		
         render();
     }
 	//---------------------------------------------------------------
 
-	function deleteAllTodos () {
+	function deleteAllTodos (todos) {
+		
 		[].concat(todos).forEach(function(todo){
 			deleteItem(todo);
 		});
-		render();
 		
+		saveTodosOnLocalStorage();
+		
+		render();
 	}
+	
 	//----------------------------------------------------------------
+	
 	function deleteItem(todo) {
 		
 		todo.element.remove();
 		todos.splice(todos.indexOf(todo), 1);
-	
+		saveTodosOnLocalStorage();
 		render();
-}
+	}
 
 	//-----------------------------------------------------------------
+	
 	function createButtons(item,todo){
 		var div = document.createElement("div");
 		div.style.display = 'inline';
@@ -75,21 +107,25 @@
 		
 		var btndone = document.createElement("input");
 		btndone.type="Button";
-		btndone.value = "Done";
+		item.style.color = todo.isDone ?'green':'gray';
+		btndone.style.backgroundColor = todo.isDone ?'green':'gray';
+		btndone.value = todo.isDone ? 'unDone' : 'done';
 		
 		btndone.addEventListener("click", function() {
-				//todo.isDone = todo.isDone ?false :true;
-				todo.isDone = !todo.isDone ;
-				item.style.color = todo.isDone ?'green':'gray';
-				btndone.style.backgroundColor = todo.isDone ?'green':'gray';
-				btndone.value = todo.isDone ? 'unDone' : 'done';
-			
-}, false);
+			//todo.isDone = todo.isDone ?false :true;
+			todo.isDone = !todo.isDone ;
+			item.style.color = todo.isDone ?'green':'gray';
+			btndone.style.backgroundColor = todo.isDone ?'green':'gray';
+			btndone.value = todo.isDone ? 'unDone' : 'done';
+			saveTodosOnLocalStorage();
+		}, false);
 		div.appendChild(btndone);
 		
 		
 		return div;
 	}
-
+	
+	
+	
 })();
 
