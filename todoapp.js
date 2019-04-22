@@ -6,7 +6,7 @@
     var addButton = document.getElementById("addButton");
 	var deleteButton = document.getElementById("deleteButton");
     var todoText = document.getElementById("todoText");
-    var todoList = document.getElementById("todoList");
+    var toDoListElements = document.getElementById("toDoListElements");
 
     addButton.onclick = addItem;
 	deleteButton.onclick = deleteAllTodos;
@@ -21,7 +21,7 @@
 			
             element.innerHTML = todo.text;
 						
-			todoList.appendChild(element);
+			toDoListElements.appendChild(element);
 			element.appendChild(createButtons(element, todo));
 			
 			todo.isRendered = true;
