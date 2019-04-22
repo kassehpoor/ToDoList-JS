@@ -1,68 +1,75 @@
-(function() {
+(function todoModule() {
 
     var todos = [];
+	window.todos = todos;
 	
     var addButton = document.getElementById("addButton");
 	var deleteButton = document.getElementById("deleteButton");
     var todoText = document.getElementById("todoText");
-    var todoList = document.getElementById("todoList");
+    var toDoListElements = document.getElementById("toDoListElements");
 
     addButton.onclick = addItem;
-	deleteButton.onclick=deleteAllTodos;
+	deleteButton.onclick = deleteAllTodos;
 	
-	
-//---------------------------------------------------------------
+	//---------------------------------------------------------------
 
-    function renderTodos() {
-		todoList.innerHTML = "";
-        todos.forEach(function(todo)  {
-			var item  = document.createElement("li");
+    function render() {
+		todos.forEach(function(todo) {
+			if(todo.isRendered) return;
 			
-            item.innerHTML = todo.text;
+			var element  = document.createElement("li");
+			
+            element.innerHTML = todo.text;
 						
-			todoList.appendChild(item);
-			var itemIndex = todos.indexOf(todo);
-			item.appendChild(createButtons(item,itemIndex,todo));
+			toDoListElements.appendChild(element);
+			element.appendChild(createButtons(element, todo));
 			
-         });
+			todo.isRendered = true;
+			todo.element = element;
+		});
     }
 
-//---------------------------------------------------------------
+	//---------------------------------------------------------------
+	
     function addItem() {
         var el = document.getElementById("todoText");
 		
 				if (el.value!=""){
-				todos.push({text:el.value,isDone:false});
+				todos.push({text:el.value,isDone:false,isRendered:false});
 				el.value = "";
 				el.focus();
 				}
 		
-        renderTodos();
+        render();
     }
-//-----------------------------------------------------------
+	//---------------------------------------------------------------
 
 	function deleteAllTodos () {
-		todos = [];
-		renderTodos();
+		[].concat(todos).forEach(function(todo){
+			deleteItem(todo);
+		});
+		render();
 		
 	}
-//----------------------------------------------------------------
-	function deleteItem(itemIndex) {
+	//----------------------------------------------------------------
+	function deleteItem(todo) {
 		
-		todos.splice(itemIndex, 1);
+		todo.element.remove();
+		todos.splice(todos.indexOf(todo), 1);
 	
-
-		renderTodos();
+		render();
 }
 
-//---------------------------------------------------------------
-	function createButtons(item,itemIndex,todo){
+	//-----------------------------------------------------------------
+	function createButtons(item,todo){
 		var div = document.createElement("div");
 		div.style.display = 'inline';
 		var btnRemove = document.createElement("input");
 		btnRemove.type="Button";
 		btnRemove.value = "delete";
-		btnRemove.onclick=function(){deleteItem(itemIndex);};
+		btnRemove.onclick=function(){
+			deleteItem(todo);
+		};
 		div.appendChild(btnRemove);
 		
 		var btndone = document.createElement("input");
@@ -70,23 +77,6 @@
 		btndone.value = "Done";
 		
 		btndone.addEventListener("click", function() {
-           	/*	 
-			if (!todo.isDone){
-				todo.isDone = true;
-				item.style.color= 'green';
-				btndone.style.backgroundColor = 'green';
-				btndone.value = 'unDone';
-
-			}else
-			{
-				todo.isDone = false;
-				item.style.color= 'black';
-				btndone.style.backgroundColor = 'gray';
-				btndone.value = 'done';
-				
-			};
-			*/
-				//-------------edited by afshin khan-------------------
 				//todo.isDone = todo.isDone ?false :true;
 				todo.isDone = !todo.isDone ;
 				item.style.color = todo.isDone ?'green':'gray';
