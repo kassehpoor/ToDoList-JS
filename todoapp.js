@@ -34,7 +34,7 @@
 			text: todo.text,
 			isDone: todo.isDone
 		}));
-		localStorage.setelement('todos', JSON.stringify(todosToBeSaved));
+		localStorage.setItem('todos', JSON.stringify(todosToBeSaved));
 	}
 	
 	//---------------------------------------------------------------------
