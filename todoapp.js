@@ -1,4 +1,4 @@
-// version 0.0.2
+// version 0.0.2  save data on loca storage
 (function todoModule() {
 
 	var todos, addButton, deleteButton, todoText, toDoListElements;
