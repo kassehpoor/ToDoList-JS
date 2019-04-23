@@ -22,9 +22,9 @@
 	//------Getting Todos elements form Loca Storage------------------------
 	
 	function getTodosFromLocalStorage() {
-		var retrievedData = localStorage.getelement('todos');
+		var retrievedData = localStorage.getItem('todos');
 		todos = retrievedData ? JSON.parse(retrievedData) : [];
-		window.todos = todos;
+		//window.todos = todos;
 	}
 	
 	//-------Save Todos elements on Loca Storage----------------------------
