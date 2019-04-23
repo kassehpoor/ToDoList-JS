@@ -13,31 +13,31 @@
         todoText = document.getElementById("todoText");
         toDoListElements = document.getElementById("toDoListElements");
 		
-		addButton.onclick = function (){addItem(todos)};
+		addButton.onclick = function (){addelement(todos)};
 	    deleteButton.onclick = function (){deleteAllTodos(todos)};
 
 		render();
 	}
 	
-	//------Getting Todos Items form Loca Storage--------------------------
+	//------Getting Todos elements form Loca Storage------------------------
 	
 	function getTodosFromLocalStorage() {
-		var retrievedData = localStorage.getItem('todos');
+		var retrievedData = localStorage.getelement('todos');
 		todos = retrievedData ? JSON.parse(retrievedData) : [];
 		window.todos = todos;
 	}
 	
-	//--------------------------------------------------------------------
+	//-------Save Todos elements on Loca Storage----------------------------
 	
 	function saveTodosOnLocalStorage() {
 		var todosToBeSaved = todos.map(todo => ({
 			text: todo.text,
 			isDone: todo.isDone
 		}));
-		localStorage.setItem('todos', JSON.stringify(todosToBeSaved));
+		localStorage.setelement('todos', JSON.stringify(todosToBeSaved));
 	}
 	
-	//--------------------------------------------------------------------
+	//---------------------------------------------------------------------
 
     function render() {
 		todos.forEach(function(todo) {
@@ -57,7 +57,7 @@
 
 	//------------------------------------------------------------------
 	
-    function addItem(todos) {
+    function addelement(todos) {
         var el = document.getElementById("todoText");
 		
 			if (el.value!=""){
@@ -74,7 +74,7 @@
 	function deleteAllTodos (todos) {
 		
 		[].concat(todos).forEach(function(todo){
-			deleteItem(todo);
+			deleteelement(todo);
 		});
 		
 		saveTodosOnLocalStorage();
@@ -84,7 +84,7 @@
 	
 	//----------------------------------------------------------------
 	
-	function deleteItem(todo) {
+	function deleteelement(todo) {
 		
 		todo.element.remove();
 		todos.splice(todos.indexOf(todo), 1);
@@ -94,27 +94,27 @@
 
 	//-----------------------------------------------------------------
 	
-	function createButtons(item,todo){
+	function createButtons(element,todo){
 		var div = document.createElement("div");
 		div.style.display = 'inline';
 		var btnRemove = document.createElement("input");
 		btnRemove.type="Button";
 		btnRemove.value = "delete";
 		btnRemove.onclick=function(){
-			deleteItem(todo);
+			deleteelement(todo);
 		};
 		div.appendChild(btnRemove);
 		
 		var btndone = document.createElement("input");
 		btndone.type="Button";
-		item.style.color = todo.isDone ?'green':'gray';
+		element.style.color = todo.isDone ?'green':'gray';
 		btndone.style.backgroundColor = todo.isDone ?'green':'gray';
 		btndone.value = todo.isDone ? 'unDone' : 'done';
 		
 		btndone.addEventListener("click", function() {
 			//todo.isDone = todo.isDone ?false :true;
 			todo.isDone = !todo.isDone ;
-			item.style.color = todo.isDone ?'green':'gray';
+			element.style.color = todo.isDone ?'green':'gray';
 			btndone.style.backgroundColor = todo.isDone ?'green':'gray';
 			btndone.value = todo.isDone ? 'unDone' : 'done';
 			saveTodosOnLocalStorage();
