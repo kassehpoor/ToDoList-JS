@@ -14,9 +14,9 @@
 <main>
     <div>
         <div>
-            <input type="text" placeholder="Enter your task..." id="txtTodo">
-            <input type="button" value="Add" onclick="var el=document.getElementById('txtTodo'); addTodo(el.value); el.value='';">
-			<input type="button" value="X All" onclick="removeAll()">
+            <input type="text" placeholder="Enter your task..." id="todoText">
+            <input type="button" value="Add"   id = "addButton"  >
+			<input type="button" value="X All" id = "deleteButton" >
         </div>
         <div>
             <ul id="todoList">
@@ -25,6 +25,9 @@
     </div>
 </main>
 
-<script src="todoapp.js"></script>
+<script src="controller.js"></script>
+<script src="view.js"></script>
+<script src="db.js"></script>
+<script src="todo.css"></script>
 </body>
 </html>
