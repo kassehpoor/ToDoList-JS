@@ -1,7 +1,6 @@
 var controller = (function () {
-	var todos = [];
-	var filter = 0; // 0:all   1:active   2:complete
-	var filteredTodos = [];
+	var _todos = [];
+	var _filter = 0; // 0:all   1:active   2:complete
 
 	init();
 
@@ -15,7 +14,7 @@ var controller = (function () {
 
 	function addTodo(value) {
 		if (!value) return;
-		todos.push({ title: value, complete: false });
+		_todos.push({ title: value, complete: false });
 		render();
 	}
 
@@ -25,17 +24,17 @@ var controller = (function () {
 	}
 
 	function remove(todo) {
-		todos.splice(todos.indexOf(todo), 1);
+		_todos.splice(_todos.indexOf(todo), 1);
 		render();
 	}
 
 	function removeAllTodos() {
-		todos = [];
+		_todos = [];
 		render();
 	}
 
 	function setFilter(value) {
-		filter = value;
+		_filter = value;
 		render();
 	}
 
@@ -44,28 +43,24 @@ var controller = (function () {
 
 
 	function init() {
-		var model = db.getModel();
-		todos = model.todos;
-		filter = model.filter;
+		var model = db.getModel() || { todos: [], filter: 0 };
+		_todos = model.todos;
+		_filter = model.filter;
 		render();
 	}
 
-	function filteredTodos() {
-		filteredTodos = filter === 0
-			? todos
-			: todos.filter(function (t) {
-				return filter === 1 ? !t.complete : t.complete;
-			});
+	function filterTodos() {
+		return (_filter === 0
+			? _todos
+			: _todos.filter(function (t) {
+				return _filter === 1 ? !t.complete : t.complete;
+			}));
 	}
 
-	function saveModelToDb() {
-		db.setModel({ todos: todos, filter: filter });
-	}
 
 	function render() {
-		saveModelToDb();
-		filteredTodos();
-		view.render(filteredTodos);
+		db.setModel({ todos: _todos, filter: _filter });
+		view.render(filterTodos());
 	}
 
 })();
